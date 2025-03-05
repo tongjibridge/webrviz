@@ -10,11 +10,12 @@ npm install
 ```
 
 ## 修改App.vue中的wsServer设置Foxglove Bridge连接地址
+
 ```typescript
 const wsServer = ref(`ws://${location.hostname}:8765`);
 ```
 
-## 启动开发环境 访问地址http://127.0.0.1:5173
+## 启动开发环境 访问地址http://localhost:5173
 
 ```bash
 npm run dev
