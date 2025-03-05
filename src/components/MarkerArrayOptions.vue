@@ -12,10 +12,7 @@ interface Props {
   index: number;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  show: true,
-  modelValue: {},
-});
+const props = defineProps<Props>();
 
 defineEmits<{
   (event: 'update:modelValue', value: any): void;

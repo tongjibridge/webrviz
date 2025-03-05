@@ -4,16 +4,10 @@ interface Props {
     fixedFrame: string;
     background: string;
   };
-  fixedFrames: string[];
+  fixedFrames?: string[];
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  fixedFrames: [],
-  modelValue: {
-    fixedFrame: 'map',
-    background: '#303030',
-  },
-});
+const props = defineProps<Props>();
 
 defineEmits<{
   (event: 'update:modelValue', value: any): void;

@@ -15,15 +15,7 @@ interface Props {
   fixedFrame: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  show: true,
-  modelValue: {
-    color: '#248EFF',
-    cellSize: 1,
-    numCells: 10,
-  },
-  fixedFrames: [],
-});
+const props = defineProps<Props>();
 
 defineEmits<{
   (event: 'update:modelValue', value: any): void;

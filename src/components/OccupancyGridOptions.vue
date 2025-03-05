@@ -14,13 +14,7 @@ interface Props {
   index: number;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  show: true,
-  modelValue: {
-    type: 'map',
-    opacity: 0.7,
-  },
-});
+const props = defineProps<Props>();
 
 defineEmits<{
   (event: 'update:modelValue', value: any): void;

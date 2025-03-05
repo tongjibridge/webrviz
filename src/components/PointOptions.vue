@@ -15,14 +15,7 @@ interface Props {
   index: number;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  show: true,
-  modelValue: {
-    color: '#CC00FF',
-    offsetZ: 0.1,
-    radius: 0.2,
-  },
-});
+const props = defineProps<Props>();
 
 defineEmits<{
   (event: 'update:modelValue', value: any): void;

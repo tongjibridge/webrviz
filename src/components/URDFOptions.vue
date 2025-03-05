@@ -12,11 +12,7 @@ interface Props {
   index: number;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  show: true,
-  modelValue: {},
-  fixedFrames: [],
-});
+const props = defineProps<Props>();
 
 defineEmits<{
   (event: 'update:modelValue', value: any): void;
