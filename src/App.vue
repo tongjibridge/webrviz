@@ -83,7 +83,7 @@ import { ArrowUpRight } from 'lucide-vue-next';
 import GlobalOptions from './components/options/GlobalOptions.vue';
 import { Channel } from '@foxglove/ws-protocol';
 import { OptionComponents } from './components/options';
-import { ViewerComponents } from '@byslin/web_rviz';
+import { Viewer, ViewerComponents } from '@byslin/web_rviz';
 
 const viewerRef = ref<
   { startClick: (type: 'pose' | 'point') => void } | undefined
