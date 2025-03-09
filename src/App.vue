@@ -12,115 +12,16 @@
               v-for="(item, index) in rvizOptions.items"
               :key="item.name"
             >
-              <template v-if="item.type === 'Grid'">
-                <GridOptions
-                  v-model="item.options"
-                  v-model:show="item.show"
-                  :fixed-frame="rvizOptions.globalOptions.fixedFrame"
-                  :fixed-frames="fixedFrames"
-                  :name="item.name"
-                  :index="index"
-                />
-              </template>
-              <template v-if="item.type === 'URDF'">
-                <URDFOptions
-                  v-model="item.options"
-                  v-model:show="item.show"
-                  :topics="topics"
-                  :name="item.name"
-                  :index="index"
-                />
-              </template>
-              <template v-if="item.type === 'MarkerArray'">
-                <MarkerArrayOptions
-                  v-model="item.options"
-                  v-model:show="item.show"
-                  :topics="topics"
-                  :name="item.name"
-                  :index="index"
-                />
-              </template>
-              <template v-if="item.type === 'LaserScan'">
-                <LaserScanOptions
-                  v-model="item.options"
-                  v-model:show="item.show"
-                  :topics="topics"
-                  :name="item.name"
-                  :index="index"
-                />
-              </template>
-              <template v-if="item.type === 'PointCloud2'">
-                <PointCloud2Options
-                  v-model="item.options"
-                  v-model:show="item.show"
-                  :topics="topics"
-                  :name="item.name"
-                  :index="index"
-                />
-              </template>
-              <template v-if="item.type === 'OccupancyGrid'">
-                <OccupancyGridOptions
-                  v-model="item.options"
-                  v-model:show="item.show"
-                  :topics="topics"
-                  :name="item.name"
-                  :index="index"
-                />
-              </template>
-              <template v-if="item.type === 'Path'">
-                <PathOptions
-                  v-model="item.options"
-                  v-model:show="item.show"
-                  :topics="topics"
-                  :name="item.name"
-                  :index="index"
-                />
-              </template>
-              <template v-if="item.type === 'PointStamped'">
-                <PointOptions
-                  v-model="item.options"
-                  v-model:show="item.show"
-                  :topics="topics"
-                  :name="item.name"
-                  :index="index"
-                />
-              </template>
-              <template v-if="item.type === 'PolygonStamped'">
-                <PolygonOptions
-                  v-model="item.options"
-                  v-model:show="item.show"
-                  :topics="topics"
-                  :name="item.name"
-                  :index="index"
-                />
-              </template>
-              <template v-if="item.type === 'PoseStamped'">
-                <PoseOptions
-                  v-model="item.options"
-                  v-model:show="item.show"
-                  :topics="topics"
-                  :name="item.name"
-                  :index="index"
-                />
-              </template>
-              <template v-if="item.type === 'PoseArray'">
-                <PoseArrayOptions
-                  v-model="item.options"
-                  v-model:show="item.show"
-                  :topics="topics"
-                  :name="item.name"
-                  :index="index"
-                />
-              </template>
-              <template v-if="item.type === 'PoseWithCovarianceStamped'">
-                <PoseWithCovarianceOptions
-                  v-model="item.options"
-                  v-model:show="item.show"
-                  :topics="topics"
-                  :name="item.name"
-                  :index="index"
-                />
-              </template>
+              <component
+                :is="OptionComponents[item.type]"
+                v-model="item.options"
+                v-model:show="item.show"
+                :fixed-frame="rvizOptions.globalOptions.fixedFrame"
+                :fixed-frames="fixedFrames"
+                :topics="topics"
+                :name="item.name"
+                :index="index"
+              />
             </template>
           </a-collapse>
         </div>
@@ -139,42 +40,11 @@
         >
           <template v-for="(item, index) in rvizOptions.items" :key="item.name">
             <template v-if="item.show">
-              <template v-if="item.type === 'Grid'">
-                <Grid :key="index" :options="item.options" />
-              </template>
-              <template v-if="item.type === 'URDF'">
-                <URDF :key="index" :options="item.options" />
-              </template>
-              <template v-if="item.type === 'LaserScan'">
-                <LaserScan :key="index" :options="item.options" />
-              </template>
-              <template v-if="item.type === 'PointCloud2'">
-                <PointCloud2 :key="index" :options="item.options" />
-              </template>
-              <template v-if="item.type === 'MarkerArray'">
-                <MarkerArray :key="index" :options="item.options" />
-              </template>
-              <template v-if="item.type === 'OccupancyGrid'">
-                <OccupancyGrid :key="index" :options="item.options" />
-              </template>
-              <template v-if="item.type === 'Path'">
-                <Path :key="index" :options="item.options" />
-              </template>
-              <template v-if="item.type === 'PointStamped'">
-                <Point :key="index" :options="item.options" />
-              </template>
-              <template v-if="item.type === 'PolygonStamped'">
-                <Polygon :key="index" :options="item.options" />
-              </template>
-              <template v-if="item.type === 'PoseStamped'">
-                <Pose :key="index" :options="item.options" />
-              </template>
-              <template v-if="item.type === 'PoseArray'">
-                <PoseArray :key="index" :options="item.options" />
-              </template>
-              <template v-if="item.type === 'PoseWithCovarianceStamped'">
-                <PoseWithCovariance :key="index" :options="item.options" />
-              </template>
+              <component
+                :is="ViewerComponents[item.type]"
+                :key="index"
+                :options="item.options"
+              />
             </template>
           </template>
         </Viewer>
@@ -210,35 +80,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { ArrowUpRight } from 'lucide-vue-next';
-import {
-  Grid,
-  LaserScan,
-  MarkerArray,
-  OccupancyGrid,
-  Path,
-  Point,
-  PointCloud2,
-  Polygon,
-  Pose,
-  PoseArray,
-  PoseWithCovariance,
-  URDF,
-  Viewer,
-} from '@byslin/web_rviz';
-import GlobalOptions from './components/GlobalOptions.vue';
-import LaserScanOptions from './components/LaserScanOptions.vue';
-import OccupancyGridOptions from './components/OccupancyGridOptions.vue';
+import GlobalOptions from './components/options/GlobalOptions.vue';
 import { Channel } from '@foxglove/ws-protocol';
-import GridOptions from './components/GridOptions.vue';
-import MarkerArrayOptions from './components/MarkerArrayOptions.vue';
-import PointCloud2Options from './components/PointCloud2Options.vue';
-import PathOptions from './components/PathOptions.vue';
-import PointOptions from './components/PointOptions.vue';
-import PolygonOptions from './components/PolygonOptions.vue';
-import PoseOptions from './components/PoseOptions.vue';
-import PoseArrayOptions from './components/PoseArrayOptions.vue';
-import PoseWithCovarianceOptions from './components/PoseWithCovarianceOptions.vue';
-import URDFOptions from './components/URDFOptions.vue';
+import { OptionComponents } from './components/options';
+import { ViewerComponents } from '@byslin/web_rviz';
 
 const viewerRef = ref<
   { startClick: (type: 'pose' | 'point') => void } | undefined

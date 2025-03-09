@@ -4,7 +4,7 @@ interface Props {
     fixedFrame: string;
     background: string;
   };
-  fixedFrames?: string[];
+  fixedFrames: string[];
 }
 
 const props = defineProps<Props>();
