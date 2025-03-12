@@ -12,6 +12,7 @@ interface Props {
     color: string;
     topic: string;
     size: number;
+    max_point_count: number;
   };
   index: number;
 }
@@ -76,6 +77,20 @@ defineEmits<{
           @change="
             (v) =>
               $emit('update:modelValue', { ...props.modelValue, decayTime: v })
+          "
+        />
+      </a-form-item>
+      <a-form-item label="Max Point Count">
+        <a-input-number
+          :model-value="modelValue.max_point_count"
+          :min="0"
+          :step="10000"
+          @change="
+            (v) =>
+              $emit('update:modelValue', {
+                ...props.modelValue,
+                max_point_count: v,
+              })
           "
         />
       </a-form-item>

@@ -18,6 +18,7 @@
                 v-model:show="item.show"
                 :fixed-frame="rvizOptions.globalOptions.fixedFrame"
                 :fixed-frames="fixedFrames"
+                :tf-tree="tfTree"
                 :topics="topics"
                 :name="item.name"
                 :index="index"
@@ -35,6 +36,7 @@
           :fixed-frame="rvizOptions.globalOptions.fixedFrame"
           :background="rvizOptions.globalOptions.background"
           @fixed-frames="setFixedFrames"
+          @tf-tree-updated="setTFTree"
           @support-view-topics="setSupportViewTopics"
           ref="viewerRef"
         >
@@ -85,12 +87,20 @@ import { Channel } from '@foxglove/ws-protocol';
 import { OptionComponents } from './components/options';
 import { Viewer, ViewerComponents } from '@byslin/web_rviz';
 
+type TFTreeNode = {
+  key: string;
+  title: string;
+  value: string;
+  children: TFTreeNode[];
+};
+
 const viewerRef = ref<
   { startClick: (type: 'pose' | 'point') => void } | undefined
 >(undefined);
 const wsServer = ref(`ws://${location.hostname}:8765`);
 const cameraType = ref<'2D' | '3D'>('3D');
 const fixedFrames = ref<string[]>([]);
+const tfTree = ref<TFTreeNode[]>([]);
 const topics = ref<Record<string, Channel>>({});
 const clickTopics = ref<Channel[]>([]);
 const clickTopic = ref<Channel | undefined>(undefined);
@@ -127,6 +137,25 @@ const rvizOptions = ref<{
       show: true,
       options: {},
     },
+    {
+      type: 'TF',
+      name: 'TF',
+      show: true,
+      options: {
+        lineColor: '#FF0000',
+        showLines: true,
+        showLabels: true,
+        frameVisible: {},
+      },
+    },
+    {
+      type: 'Axes',
+      name: 'Axes',
+      show: false,
+      options: {
+        lineType: 'full',
+      },
+    },
   ],
 });
 
@@ -158,6 +187,10 @@ const setFixedFrames = (data: string[]) => {
   fixedFrames.value = data;
 };
 
+const setTFTree = (data: TFTreeNode[]) => {
+  tfTree.value = data;
+};
+
 const setSupportViewTopics = (data: Record<string, Channel>) => {
   topics.value = data;
   clickTopics.value = [];
@@ -172,16 +205,41 @@ const setSupportViewTopics = (data: Record<string, Channel>) => {
     } else if (type === 'PoseWithCovarianceStamped') {
       clickTopics.value.push(item);
     }
-    rvizOptions.value.items.push({
-      name: item.topic,
-      options: {
-        topic: item.topic,
-        ...defaultOptions,
-      },
-      show: false,
-      type,
-    });
+    const index = rvizOptions.value.items.findIndex(
+      (v) => v.name === item.topic,
+    );
+    if (index === -1) {
+      rvizOptions.value.items.push({
+        name: item.topic,
+        options: {
+          topic: item.topic,
+          ...defaultOptions,
+        },
+        show: false,
+        type,
+      });
+    }
   }
+};
+
+/**
+ * 生成明亮饱和的随机颜色
+ */
+const getRandomVibrantHexColor = (): string => {
+  const r = Math.floor(Math.random() * 256); // 红色通道
+  const g = Math.floor(Math.random() * 256); // 绿色通道
+  const b = Math.floor(Math.random() * 256); // 蓝色通道
+
+  // 让颜色更加明亮和饱和
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  if (max < 200 || max - min < 50) {
+    return getRandomVibrantHexColor(); // 递归调用直到颜色明亮且饱和
+  }
+
+  // 将每个通道的值转换为两位的十六进制字符串
+  const toHex = (value: number) => value.toString(16).padStart(2, '0');
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 };
 
 const getDefaultOptions = (type: string) => {
@@ -196,6 +254,7 @@ const getDefaultOptions = (type: string) => {
     return {
       size: 0.01,
       decayTime: 0,
+      max_point_count: 0,
       colorType: 'FlatColor',
       color: '#FF0000',
     };
@@ -206,31 +265,31 @@ const getDefaultOptions = (type: string) => {
     };
   } else if (type === 'Path') {
     return {
-      color: '#CC00FF',
+      color: getRandomVibrantHexColor(),
       offsetZ: 0.1,
     };
   } else if (type === 'PointStamped') {
     return {
-      color: '#CC00FF',
+      color: getRandomVibrantHexColor(),
       offsetZ: 0,
       radius: 0.2,
     };
   } else if (type === 'PolygonStamped') {
     return {
-      color: '#CC00FF',
+      color: getRandomVibrantHexColor(),
     };
   } else if (type === 'PoseStamped') {
     return {
-      color: '#CC00FF',
+      color: getRandomVibrantHexColor(),
     };
   } else if (type === 'PoseArray') {
     return {
-      color: '#CC00FF',
+      color: getRandomVibrantHexColor(),
       length: 1.0,
     };
   } else if (type === 'PoseWithCovarianceStamped') {
     return {
-      color: '#CC00FF',
+      color: getRandomVibrantHexColor(),
     };
   }
 };
