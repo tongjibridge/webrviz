@@ -78,6 +78,7 @@
       </a-layout-content>
     </a-layout>
   </div>
+  <div class="image" ref="imageRef"></div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
@@ -94,6 +95,7 @@ type TFTreeNode = {
   children: TFTreeNode[];
 };
 
+const imageRef = ref<HTMLDivElement>(null);
 const viewerRef = ref<
   { startClick: (type: 'pose' | 'point') => void } | undefined
 >(undefined);
@@ -245,6 +247,10 @@ const getRandomVibrantHexColor = (): string => {
 const getDefaultOptions = (type: string) => {
   if (type === 'MarkerArray') {
     return {};
+  } else if (type === 'Image') {
+    return {
+      renderDom: imageRef.value,
+    };
   } else if (type === 'LaserScan') {
     return {
       color: '#FF0000',
@@ -295,7 +301,7 @@ const getDefaultOptions = (type: string) => {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .main-viewer {
   width: 100%;
   height: 100%;
@@ -328,5 +334,25 @@ const getDefaultOptions = (type: string) => {
 
 .click-topic.active {
   background: aqua;
+}
+
+.image {
+  position: absolute;
+  top: 80px;
+  right: 10px;
+  display: flex;
+  width: 320px;
+
+  :deep(video) {
+    width: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+    margin-top: 10px;
+    flex: 1;
+  }
+
+  :deep(video):first-child {
+    margin-top: 0;
+  }
 }
 </style>

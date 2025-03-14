@@ -2,6 +2,7 @@ import GridOptions from './GridOptions.vue';
 import AxesOptions from './AxesOptions.vue';
 import TFOptions from './TFOptions.vue';
 import MarkerArrayOptions from './MarkerArrayOptions.vue';
+import ImageOptions from './ImageOptions.vue';
 import PointCloud2Options from './PointCloud2Options.vue';
 import OccupancyGridOptions from './OccupancyGridOptions.vue';
 import PathOptions from './PathOptions.vue';
@@ -19,6 +20,7 @@ export const OptionComponents = {
   TF: TFOptions,
   URDF: URDFOptions,
   MarkerArray: MarkerArrayOptions,
+  Image: ImageOptions,
   LaserScan: LaserScanOptions,
   PointCloud2: PointCloud2Options,
   OccupancyGrid: OccupancyGridOptions,
