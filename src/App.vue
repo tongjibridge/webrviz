@@ -1,5 +1,12 @@
 <template>
   <div class="main-viewer">
+    <div class="hostname-input">
+      <a-input v-model="hostname" placeholder="输入WebSocket服务器主机名" />
+      <a-button type="primary" @click="updateWsServer" style="margin-left: 8px"
+        >更新连接</a-button
+      >
+    </div>
+
     <a-layout>
       <a-layout-sider :width="350">
         <div class="sider-content">
@@ -29,6 +36,7 @@
       </a-layout-sider>
       <a-layout-content>
         <Viewer
+          :debug="true"
           :url="wsServer"
           :reconnect-time="3000"
           :click-topic="clickTopic"
@@ -83,10 +91,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { ArrowUpRight } from 'lucide-vue-next';
-import GlobalOptions from './components/options/GlobalOptions.vue';
-import { Channel } from '@foxglove/ws-protocol';
 import { OptionComponents } from './components/options';
-import { Viewer, ViewerComponents } from '@byslin/web_rviz';
+import { Channel, Viewer, ViewerComponents } from '@byslin/web_rviz';
+import GlobalOptions from './components/options/GlobalOptions.vue';
 
 type TFTreeNode = {
   key: string;
@@ -99,8 +106,10 @@ const imageRef = ref<HTMLDivElement>(null);
 const viewerRef = ref<
   { startClick: (type: 'pose' | 'point') => void } | undefined
 >(undefined);
-const wsServer = ref(`ws://${location.hostname}:8765`);
+const hostname = ref(location.hostname);
+const wsServer = ref(`ws://${hostname.value}:8765`);
 const cameraType = ref<'2D' | '3D'>('3D');
+
 const fixedFrames = ref<string[]>([]);
 const tfTree = ref<TFTreeNode[]>([]);
 const topics = ref<Record<string, Channel>>({});
@@ -193,6 +202,10 @@ const setTFTree = (data: TFTreeNode[]) => {
   tfTree.value = data;
 };
 
+const updateWsServer = () => {
+  wsServer.value = `ws://${hostname.value}:8765`;
+};
+
 const setSupportViewTopics = (data: Record<string, Channel>) => {
   topics.value = data;
   clickTopics.value = [];
@@ -254,11 +267,11 @@ const getDefaultOptions = (type: string) => {
   } else if (type === 'LaserScan') {
     return {
       color: '#FF0000',
-      size: 0.01,
+      size: 1,
     };
   } else if (type === 'PointCloud2') {
     return {
-      size: 0.01,
+      size: 1,
       decayTime: 0,
       max_point_count: 0,
       colorType: 'FlatColor',
@@ -297,11 +310,26 @@ const getDefaultOptions = (type: string) => {
     return {
       color: getRandomVibrantHexColor(),
     };
+  } else if (type === 'Octomap') {
+    return {
+      opacity: 1.0,
+      colorMode: 'zAxisColor',
+      voxelRenderMode: 'occupied',
+    };
   }
 };
 </script>
 
 <style lang="less" scoped>
+.hostname-input {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+
 .main-viewer {
   width: 100%;
   height: 100%;
