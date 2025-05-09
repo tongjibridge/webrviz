@@ -1,3 +1,5 @@
+这是修改BySlin的web_rviz_demo,增加手动输入远程ip地址，原程序地址https://github.com/BySlin/web_rviz_demo
+
 # Vue 3 Web Rviz
 
 本项目基于Foxglove Bridge, 使用前请先安装并启动Foxglove bridge
