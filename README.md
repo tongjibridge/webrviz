@@ -28,3 +28,5 @@ npm run dev
 ```bash
 npm run build
 ```
+## 打包成apk
+下载HBuilderX，创建5+app，将dist文件下的文件粘贴替换到5+app目录中，然后进行打包，具体参考网上教程
