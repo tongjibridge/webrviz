@@ -106,7 +106,7 @@ const imageRef = ref<HTMLDivElement>(null);
 const viewerRef = ref<
   { startClick: (type: 'pose' | 'point') => void } | undefined
 >(undefined);
-const hostname = ref(location.hostname);
+const hostname = ref('10.42.0.1');
 const wsServer = ref(`ws://${hostname.value}:8765`);
 const cameraType = ref<'2D' | '3D'>('3D');
 
